@@ -11,7 +11,7 @@ import (
 {{- if .Viper }}
 	"fmt"{{ end }}
 	"os"
-	log "github.com/sirupsen/logrus"
+	loglib "github.com/sirupsen/logrus"
 	"github.com/mannk98/gonetlibs"
 	"github.com/mannk98/golibs/utils"
 
@@ -24,8 +24,8 @@ var (
 {{ if .Viper -}}
 	cfgFile string
 {{- end }}
-	Logger   = log.New()
-	LogLevel = log.DebugLevel
+	log   = loglib.New()
+	LogLevel = loglib.DebugLevel
 	LogFile  = "{{ .AppName }}.log"
 	cfgFileDefault = ".{{ .AppName }}.toml"
 )
@@ -55,7 +55,10 @@ func Execute() {
 }
 
 func init() {
-	utils.InitLogger(LogFile, Logger, LogLevel)
+	err := utils.InitLogger(LogFile, log, LogLevel)
+	if err != nil {
+		cobra.CheckErr(err)
+	}
 {{- if .Viper }}
 	cobra.OnInitialize(initConfig)
 {{ end }}
@@ -82,7 +85,7 @@ func initConfig() {
 		// Find home directory.
 		home, err := os.UserHomeDir()
 		if err != nil {
-			Logger.Error(err)
+			log.Error(err)
 			os.Exit(1)
 		}
 
@@ -100,16 +103,15 @@ func initConfig() {
 		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
 			log.Error("Config fifle: .{{ .AppName }} file at ./ folder is not exist. Create it first.")
 		} else {
-			Logger.Error(err)
+			log.Error(err)
 		}
 	} else {
-		Logger.Info("Using config file:", viper.ConfigFileUsed())
+		log.Info("Using config file:", viper.ConfigFileUsed())
 	}
 }
 {{- end }}
 
 func rootRun(cmd *cobra.Command, args []string) {
-	Logger.Info("Program started.")
 	log.Info("Program started.")
 	fmt.Println(viper.GetString("sample"))
 }

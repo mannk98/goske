@@ -62,7 +62,7 @@ func (p *EchoProject) create(year, author string) error {
 		}
 	}
 
-	// create main.go
+	//////////////////////////////////////////// create main.go
 	mainFile, err := os.Create(fmt.Sprintf("%s/main.go", p.AbsolutePath))
 	if err != nil {
 		return err
@@ -74,37 +74,13 @@ func (p *EchoProject) create(year, author string) error {
 	if err != nil {
 		return err
 	}
-	////////////////////////////////////////////////////////////////////////////
-	// create cmd/root.go
+
+	//////////////////////////////////////////// create dirs
+	// create cmd
 	if _, err = os.Stat(fmt.Sprintf("%s/%s", p.AbsolutePath, DIR_CMD)); os.IsNotExist(err) {
 		cobra.CheckErr(os.Mkdir(fmt.Sprintf("%s/%s", p.AbsolutePath, DIR_CMD), PERMISSION_DIR))
 	}
-	rootFile, err := os.Create(fmt.Sprintf("%s/%s/root.go", p.AbsolutePath, DIR_CMD))
-	if err != nil {
-		return err
-	}
-	defer rootFile.Close()
 
-	rootTemplate := template.Must(template.New("root").Parse(string(tpl.RootTemplate())))
-	err = rootTemplate.Execute(rootFile, p)
-	if err != nil {
-		return err
-	}
-
-	// create cmd/server.go
-	/*	serverFile, err := os.Create(fmt.Sprintf("%s/%s/server.go", p.AbsolutePath, DIR_CMD))
-		if err != nil {
-			return err
-		}
-		defer rootFile.Close()
-
-		serverTemplate := template.Must(template.New("server").Parse(string(tpl.CmdServerTemplate())))
-		err = serverTemplate.Execute(serverFile, p)
-		if err != nil {
-			return err
-		}*/
-
-	////////////////////////////////////////////////////////////////////////////
 	// create docs
 	if _, err = os.Stat(fmt.Sprintf("%s/%s", p.AbsolutePath, DIR_DOCS)); os.IsNotExist(err) {
 		cobra.CheckErr(os.Mkdir(fmt.Sprintf("%s/%s", p.AbsolutePath, DIR_DOCS), PERMISSION_DIR))
@@ -125,9 +101,88 @@ func (p *EchoProject) create(year, author string) error {
 		cobra.CheckErr(os.Mkdir(fmt.Sprintf("%s/%s", p.AbsolutePath, DIR_SERVICE), PERMISSION_DIR))
 	}
 
-	// create service
+	// create models
 	if _, err = os.Stat(fmt.Sprintf("%s/%s", p.AbsolutePath, DIR_MODELS)); os.IsNotExist(err) {
 		cobra.CheckErr(os.Mkdir(fmt.Sprintf("%s/%s", p.AbsolutePath, DIR_MODELS), PERMISSION_DIR))
+	}
+
+	//////////////////////////////////////////// init .go files in cmd
+	// create cmd/root.go
+	rootFile, err := os.Create(fmt.Sprintf("%s/%s/root.go", p.AbsolutePath, DIR_CMD))
+	if err != nil {
+		return err
+	}
+	defer rootFile.Close()
+
+	rootTemplate := template.Must(template.New("root").Parse(string(tpl.EchoCmdRootTemplate())))
+	err = rootTemplate.Execute(rootFile, p)
+	if err != nil {
+		return err
+	}
+
+	// create cmd/server.go
+	serverFile, err := os.Create(fmt.Sprintf("%s/%s/server.go", p.AbsolutePath, DIR_CMD))
+	if err != nil {
+		return err
+	}
+	defer rootFile.Close()
+
+	serverTemplate := template.Must(template.New("server").Parse(string(tpl.EchoCmdServerTemplate())))
+	err = serverTemplate.Execute(serverFile, p)
+	if err != nil {
+		return err
+	}
+
+	// create cmd/global.go
+	file, err := os.Create(fmt.Sprintf("%s/%s/globlal.go", p.AbsolutePath, DIR_CMD))
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	templ := template.Must(template.New("global").Parse(string(tpl.EchoCmdGlobalTemplate())))
+	err = templ.Execute(file, p)
+	if err != nil {
+		return err
+	}
+
+	// create cmd/server_di.go
+	file, err = os.Create(fmt.Sprintf("%s/%s/server_di.go", p.AbsolutePath, DIR_CMD))
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	templ = template.Must(template.New("server_di").Parse(string(tpl.EchoCmdServerDiTemplate())))
+	err = templ.Execute(file, p)
+	if err != nil {
+		return err
+	}
+
+	// create cmd/server_middleware.go
+	file, err = os.Create(fmt.Sprintf("%s/%s/server_middleware.go", p.AbsolutePath, DIR_CMD))
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	templ = template.Must(template.New("server_middleware").Parse(string(tpl.EchoCmdServerMiiddlewareTemplate())))
+	err = templ.Execute(file, p)
+	if err != nil {
+		return err
+	}
+
+	// create cmd/server_route.go
+	file, err = os.Create(fmt.Sprintf("%s/%s/server_route.go", p.AbsolutePath, DIR_CMD))
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	templ = template.Must(template.New("server_route").Parse(string(tpl.EchoCmdServerRouteTemplate())))
+	err = templ.Execute(file, p)
+	if err != nil {
+		return err
 	}
 
 	// create license
