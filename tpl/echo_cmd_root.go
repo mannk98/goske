@@ -2,7 +2,7 @@ package tpl
 
 func EchoCmdRootTemplate() []byte {
 	return []byte(`/*
-{{ .Project.GetCopyright }}
+{{ .GetCopyright }}
 */
 package cmd
 

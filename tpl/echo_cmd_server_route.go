@@ -2,7 +2,7 @@ package tpl
 
 func EchoCmdServerRouteTemplate() []byte {
 	return []byte(`/*
-{{ .Project.GetCopyright }}
+{{ .GetCopyright }}
 */
 package cmd
 

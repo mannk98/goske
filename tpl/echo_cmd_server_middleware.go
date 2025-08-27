@@ -2,7 +2,7 @@ package tpl
 
 func EchoCmdServerMiiddlewareTemplate() []byte {
 	return []byte(`/*
-{{ .Project.GetCopyright }}
+{{ .GetCopyright }}
 */
 package cmd
 
