@@ -1,7 +1,9 @@
 package tpl
 
 func EchoCmdGlobalTemplate() []byte {
-	return []byte(`
+	return []byte(`/*
+{{ .Project.GetCopyright }}
+*/
 package cmd
 
 import log "github.com/sirupsen/logrus"
@@ -16,8 +18,8 @@ type Global struct {
 
 var global = Global{
 	server:  new(ApiServer),
-	cfgFile: ".goapi-jwt.toml",
-	logFile: ".goapi-jwt.log",
+	cfgFile: ".{{ .AppName }}.toml",
+	logFile: "{{ .AppName }}.log",
 }
 
 var (

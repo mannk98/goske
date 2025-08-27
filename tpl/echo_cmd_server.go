@@ -1,7 +1,9 @@
 package tpl
 
 func EchoCmdServerTemplate() []byte {
-	return []byte(`
+	return []byte(`/*
+{{ .Project.GetCopyright }}
+*/
 package cmd
 
 import (

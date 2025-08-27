@@ -1,7 +1,9 @@
 package tpl
 
 func EchoCmdServerRouteTemplate() []byte {
-	return []byte(`
+	return []byte(`/*
+{{ .Project.GetCopyright }}
+*/
 package cmd
 
 func (server *ApiServer) route() {
@@ -9,7 +11,7 @@ func (server *ApiServer) route() {
 	server.groupSystemAPI = server.echo.Group("/api/function")
 	server.groupSystemAPI.Use(server.AuthSecretMiddleware())
 	/* both call by authentication service when user login */
-	//server.groupSystemAPI.POST("/sign", server.jwtHandler.HandleJwtSign())
+	//server.groupSystemAPI.POST("/sign", server.exampleHandler.Example())
 }
 
 `)
