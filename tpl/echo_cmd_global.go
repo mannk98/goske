@@ -6,12 +6,15 @@ func EchoCmdGlobalTemplate() []byte {
 */
 package cmd
 
-import log "github.com/sirupsen/logrus"
+import (
+	loglib "github.com/mannk98/golibs/log"
+	"github.com/sirupsen/logrus"
+)
 
 type Global struct {
 	server *ApiServer
 
-	logLevel log.Level
+	logLevel logrus.Level
 	cfgFile  string
 	logFile  string
 }
@@ -23,7 +26,7 @@ var global = Global{
 }
 
 var (
-	Logger = log.New()
+	log = loglib.NewLogger()
 )
 `)
 }

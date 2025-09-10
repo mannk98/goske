@@ -11,13 +11,13 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/spf13/cobra"
 	"net/http"
-	"strconv"
 )
 
 type ApiServer struct {
 	systemSecret string
-	port         int
-	location     string
+	port         string
+	timezone     string
+	loglevel     string
 
 	groupSystemAPI *echo.Group
 	echo           *echo.Echo
@@ -56,7 +56,7 @@ func (server *ApiServer) Start() {
 	server.setMiddleware()
 	server.route()
 
-	if err := server.echo.Start(":" + strconv.Itoa(server.port)); err != nil && err != http.ErrServerClosed {
+	if err := server.echo.Start(":" + server.port); err != nil && err != http.ErrServerClosed {
 		fmt.Println(err)
 		server.echo.Logger.Fatal("shutting down the server")
 	}
