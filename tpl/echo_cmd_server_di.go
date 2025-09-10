@@ -7,6 +7,7 @@ func EchoCmdServerDiTemplate() []byte {
 package cmd
 
 func (server *ApiServer) dependenciesInjection() {
+	// init services, handlers, database
 }
 
 `)
