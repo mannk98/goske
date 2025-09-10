@@ -185,6 +185,45 @@ func (p *EchoProject) create(year, author string) error {
 		return err
 	}
 
+	// create Dockerfile
+	file, err = os.Create(fmt.Sprintf("%s/Dockerfile", p.AbsolutePath))
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	templ = template.Must(template.New("dockerfile").Parse(string(tpl.EchoServerDockerFileTemplate())))
+	err = templ.Execute(file, p)
+	if err != nil {
+		return err
+	}
+
+	// create .gitignore
+	file, err = os.Create(fmt.Sprintf("%s/.gitignore", p.AbsolutePath))
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	templ = template.Must(template.New(".gitignore").Parse(string(tpl.EchoServerGitignoreTemplate())))
+	err = templ.Execute(file, p)
+	if err != nil {
+		return err
+	}
+
+	// create docker-compose.yaml
+	file, err = os.Create(fmt.Sprintf("%s/docker-compose.yaml", p.AbsolutePath))
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	templ = template.Must(template.New("docker-compose.yaml").Parse(string(tpl.EchoServerDockerComposeTemplate())))
+	err = templ.Execute(file, p)
+	if err != nil {
+		return err
+	}
+
 	// create license
 	return p.createLicenseFile(year, author)
 }
