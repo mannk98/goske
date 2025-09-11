@@ -11,6 +11,8 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/spf13/cobra"
 	"net/http"
+	"test/interfaces"
+	"test/service"
 )
 
 type ApiServer struct {
@@ -18,6 +20,9 @@ type ApiServer struct {
 	port         string
 	timezone     string
 	loglevel     string
+
+	yS *service.YourService
+	yH interfaces.YourServiceHandler
 
 	groupSystemAPI *echo.Group
 	echo           *echo.Echo

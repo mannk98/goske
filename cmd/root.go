@@ -48,7 +48,6 @@ func Execute() error {
 func init() {
 	cobra.OnInitialize(initConfig)
 
-	// setup flag, default value, use string
 	/*	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.cobra.yaml)")*/
 	rootCmd.PersistentFlags().StringP("author", "a", "YOUR NAME", "author name for copyright attribution")
 	rootCmd.PersistentFlags().StringVarP(&userLicense, "license", "l", "", "name of license for the project")
@@ -87,13 +86,9 @@ func initConfig() {
 		// Use config file from the flag.
 		viper.SetConfigFile(cfgFile)
 	} else {
-		// Find home directory.
 		home, err := os.UserHomeDir()
-
-		// if err != nil, this command will exit program imediately
 		cobra.CheckErr(err)
 
-		// Search config in home directory with name ".cobra" (without extension).
 		viper.AddConfigPath(home)
 		viper.SetConfigType("toml")
 		viper.SetConfigName(".goske")
@@ -105,13 +100,12 @@ func initConfig() {
 
 	notFound := &viper.ConfigFileNotFoundError{}
 	switch {
-	// if err happend when read config file and it is not configFileNotFoundError type
 	case err != nil && !errors.As(err, notFound):
 		cobra.CheckErr(err)
 	case err != nil && errors.As(err, notFound):
 		// The config file is optional, we shouldn't exit when the config is not found
 		break
 	default:
-		fmt.Fprintln(os.Stderr, "Using config file:", viper.ConfigFileUsed())
+		fmt.Printf("Using config file: %s", viper.ConfigFileUsed())
 	}
 }

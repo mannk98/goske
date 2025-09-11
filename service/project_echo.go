@@ -7,6 +7,7 @@ import (
 	"goske/tpl"
 	"os"
 	"path"
+	"path/filepath"
 	"text/template"
 )
 
@@ -219,6 +220,48 @@ func (p *EchoProject) create(year, author string) error {
 	defer file.Close()
 
 	templ = template.Must(template.New("docker-compose.yaml").Parse(string(tpl.EchoServerDockerComposeTemplate())))
+	err = templ.Execute(file, p)
+	if err != nil {
+		return err
+	}
+
+	// create interfaces/yourHandler.go
+	fpath := filepath.Clean(fmt.Sprintf("%s/%s/yourHandler.go", p.AbsolutePath, DIR_INTERFACES))
+	file, err = os.Create(fmt.Sprintf(fpath))
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	templ = template.Must(template.New(fpath).Parse(string(tpl.EchoInterfacesTemplate())))
+	err = templ.Execute(file, p)
+	if err != nil {
+		return err
+	}
+
+	// create handler/yourHandler.go
+	fpath = filepath.Clean(fmt.Sprintf("%s/%s/yourHandler.go", p.AbsolutePath, DIR_HANDLER))
+	file, err = os.Create(fmt.Sprintf(fpath))
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	templ = template.Must(template.New(fpath).Parse(string(tpl.EchoHandlerTemplate())))
+	err = templ.Execute(file, p)
+	if err != nil {
+		return err
+	}
+
+	// create service/yourService.go
+	fpath = filepath.Clean(fmt.Sprintf("%s/%s/yourService.go", p.AbsolutePath, DIR_SERVICE))
+	file, err = os.Create(fmt.Sprintf(fpath))
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	templ = template.Must(template.New(fpath).Parse(string(tpl.EchoServiceTemplate())))
 	err = templ.Execute(file, p)
 	if err != nil {
 		return err
