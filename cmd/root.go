@@ -105,7 +105,7 @@ func initConfig() {
 
 	notFound := &viper.ConfigFileNotFoundError{}
 	switch {
-	// if err happend when read config file and it is not configFileNotFoundError type
+	// if err happens when read config file which is not configFileNotFoundError
 	case err != nil && !errors.As(err, notFound):
 		cobra.CheckErr(err)
 	case err != nil && errors.As(err, notFound):

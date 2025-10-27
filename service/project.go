@@ -112,7 +112,10 @@ func (p *Project) InitializeProject(args []string, viper bool, userLicense, lice
 		}
 	}
 
-	modName := getModImportPath()
+	modName, errGetMod := getModImportPath()
+	if errGetMod != nil {
+		return "", errGetMod
+	}
 
 	project := &Project{
 		AbsolutePath: wd,
@@ -122,6 +125,21 @@ func (p *Project) InitializeProject(args []string, viper bool, userLicense, lice
 		Viper:        viper,
 		AppName:      path.Base(modName),
 	}
+
+	fmt.Printf("Project Initialization Info:\n"+
+		"  AbsolutePath: %s\n"+
+		"  PkgName:      %s\n"+
+		"  AppName:      %s\n"+
+		"  Copyright:    %s\n"+
+		"  Legal:        %v\n"+ // Use %v for struct/complex types
+		"  Viper Config: %v\n", // Use %v to print the Viper configuration object
+		project.AbsolutePath,
+		project.PkgName,
+		project.AppName,
+		project.Copyright,
+		project.Legal,
+		project.Viper,
+	)
 
 	if err := project.create(year, author); err != nil {
 		return "", err

@@ -19,6 +19,7 @@ import (
 	"github.com/spf13/viper"
 	"goske/interfaces"
 	"goske/service"
+	"os"
 	"os/exec"
 )
 
@@ -56,14 +57,17 @@ Cobra init must be run inside of a go module (please run "go mod init <MODNAME>"
 				goSke = service.NewProject()
 			}
 
-			projectPath, err := goSke.InitializeProject(args, viperIsUsed, userLicense, license_header, license_text, year, author)
-			cobra.CheckErr(err)
+			projectPath, errInit := goSke.InitializeProject(args, viperIsUsed, userLicense, license_header, license_text, year, author)
+
+			if errInit != nil {
+				fmt.Println("Error init:", errInit)
+				os.Exit(3)
+			}
 			cobra.CheckErr(goGet("github.com/spf13/cobra"))
 			if viper.GetBool("useViper") {
 				cobra.CheckErr(goGet("github.com/spf13/viper"))
 			}
 
-			cobra.CheckErr(err)
 			fmt.Printf("Your Cobra application is ready at\n%s\n", projectPath)
 		},
 	}

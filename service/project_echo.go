@@ -205,7 +205,10 @@ func (p *EchoProject) InitializeProject(args []string, viper bool, userLicense, 
 		}
 	}
 
-	modName := getModImportPath()
+	modName, errGetMod := getModImportPath()
+	if errGetMod != nil {
+		return "", errGetMod
+	}
 
 	project := &EchoProject{
 		AbsolutePath: wd,
